@@ -1,6 +1,6 @@
 from app import app
 
-from flask import render_template, request, redirect
+from flask import render_template, request, redirect, jsonify, make_response
 
 from datetime import datetime
 
@@ -114,3 +114,34 @@ def profile(username):
 @app.route('/multiple/<foo>/<bar>/<baz>')
 def multi(foo, bar, baz):
     return f'foo: {foo}, bar: {bar}, baz: {baz}'
+
+@app.route('/json', methods=['POST'])
+def json():
+
+    if request.is_json:
+        req = request.get_json()
+        response = {
+            "message": "JSON received!",
+            "name": req.get("name")
+        }
+        res = make_response(jsonify(response), 200)
+        return res
+
+    else:
+        res = make_response(jsonify({"message": "No JSON received!"}), 400)
+        return res
+
+@app.route("/guestbook")
+def guestbook():
+    return render_template('public/guestbook.html')
+
+@app.route('/guestbook/create-entry', methods=["POST"])
+def create_entry():
+
+    req = request.get_json()
+
+    print(req)
+
+    res = make_response(jsonify(req), 200)
+
+    return res
