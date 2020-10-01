@@ -10,6 +10,9 @@ def clean_date(dt):
 
 @app.route("/")
 def index():
+
+    print(f"Flask ENV is set to: {app.config['ENV']} mode")
+
     return render_template('public/index.html')
 
 @app.route("/jinja")
