@@ -77,23 +77,23 @@ def about():
     return render_template('public/about.html')
 
 
-@app.route('/sign-up', methods=["GET", "POST"])
-def sign_up():
+# @app.route('/sign-up', methods=["GET", "POST"])
+# def sign_up():
 
-    if request.method == "POST":
+#     if request.method == "POST":
 
-        req = request.form
+#         req = request.form
 
-        username = req['username']
-        email = req['email']
-        password = req['password']
+#         username = req['username']
+#         email = req['email']
+#         password = req['password']
 
-        print(username, email, password)
+#         print(username, email, password)
 
-        return redirect(request.url)
+#         return redirect(request.url)
 
 
-    return  render_template('public/sign_up.html')
+#     return  render_template('public/sign_up.html')
 
 users = {
     'LuminaryNutrition': {
@@ -357,3 +357,27 @@ def sign_out():
     session.pop("USERNAME", None)
 
     return redirect(url_for("sign_in"))
+
+
+# message flashing stuff
+
+from flask import request, redirect, flash
+
+@app.route('/sign-up', methods = ["GET", "POST"])
+def sign_up():
+
+    if request.method == 'POST':
+        req = request.form
+        username = req.get('username')
+        email = req.get('email')
+        password = req.get('password')
+
+        if not len(password) >= 10:
+            flash("Password must be at least 10 characters long", "warning")
+            return redirect(request.url)
+        
+        flash("Account Created!", "success")
+
+        return redirect(request.url)
+
+    return render_template("public/sign_up.html")
